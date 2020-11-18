@@ -1,6 +1,7 @@
 import os
 import logging
 
+from hyo2.soundspeed.atlas.argoonline import ArgoOnline
 from hyo2.soundspeed.atlas.woa09 import Woa09
 from hyo2.soundspeed.atlas.woa13 import Woa13
 from hyo2.soundspeed.atlas.rtofs import Rtofs
@@ -56,10 +57,17 @@ class Atlases:
             os.makedirs(self._regofs_folder)
         # logger.info("regofs path: %s" % regofs_folder)
 
+        # argos
+        argos_folder = os.path.join(self._atlases_folder, "argos")
+        if not os.path.exists(argos_folder):
+            os.makedirs(argos_folder)
+        # logger.info("argos path: %s" % argos_folder)
+
         # available atlases
         self.woa09 = Woa09(data_folder=woa09_folder, prj=self.prj)
         self.woa13 = Woa13(data_folder=woa13_folder, prj=self.prj)
         self.rtofs = Rtofs(data_folder=rtofs_folder, prj=self.prj)
+        self.argos = ArgoOnline(data_folder=argos_folder, prj=self.prj)
 
         self.cbofs = RegOfsOnline(data_folder=self._regofs_folder, prj=self.prj, model=RegOfsOnline.Model.CBOFS)
         self.dbofs = RegOfsOnline(data_folder=self._regofs_folder, prj=self.prj, model=RegOfsOnline.Model.DBOFS)
@@ -98,12 +106,17 @@ class Atlases:
     def regofs_folder(self):
         return self._regofs_folder
 
+    @property
+    def argos_folder(self):
+        return self.argos.data_folder
+
     # noinspection DuplicatedCode
     def __repr__(self):
         msg = "  <atlases>\n"
         msg += "  %s" % self.woa09
         msg += "  %s" % self.woa13
         msg += "  %s" % self.rtofs
+        msg += "  %s" % self.argos
         msg += "  %s" % self.cbofs
         msg += "  %s" % self.dbofs
         msg += "  %s" % self.gomofs

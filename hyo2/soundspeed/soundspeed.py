@@ -285,6 +285,11 @@ class SoundSpeedLibrary:
         """Get the regofs atlas folder"""
         return self.atlases.regofs_folder
 
+    @property
+    def argos_folder(self) -> str:
+        """Get the argos folder"""
+        return self.atlases.argos_folder
+
     # projects
 
     @property
@@ -553,6 +558,19 @@ class SoundSpeedLibrary:
             return
 
         self.ssp = self.atlases.rtofs.query(lat=lat, lon=lon, dtstamp=utc_time)
+
+    def retrieve_argos(self) -> None:
+        """Retrieve data from Argos database"""
+
+        utc_time = self.cb.ask_date()
+        if utc_time is None:
+            logger.error("missing date required for database lookup")
+            return
+
+        if not self.download_argos(datestamp=utc_time):
+            logger.error("Unable to download Argo dataset")
+        return
+
 
     def retrieve_gomofs(self) -> None:
         """Retrieve data from GoMOFS atlas"""
@@ -1964,6 +1982,9 @@ class SoundSpeedLibrary:
     def has_rtofs(self) -> bool:
         return self.atlases.rtofs.is_present()
 
+    def has_argos(self) -> bool:
+        return self.atlases.argos.is_present()
+
     def has_cbofs(self) -> bool:
         return self.atlases.cbofs.is_present()
 
@@ -2014,6 +2035,9 @@ class SoundSpeedLibrary:
 
     def download_rtofs(self, datestamp: Optional['datetime'] = None) -> bool:
         return self.atlases.rtofs.download_db(dtstamp=datestamp)
+
+    def download_argos(self, datestamp: Optional['datetime'] = None) -> bool:
+        return self.atlases.argos.download_db()
 
     def download_cbofs(self, datestamp: Optional['datetime'] = None) -> bool:
         return self.atlases.cbofs.download_db(dtstamp=datestamp)
