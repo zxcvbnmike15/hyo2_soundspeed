@@ -147,9 +147,11 @@ class RegOfsOnline(AbstractAtlas):
             logger.error("invalid location query: %s @ (%s, %s)" % (dtstamp.strftime("%Y/%m/%d %H:%M:%S"), lon, lat))
             return None
 
-        if dtstamp is None:
-            logger.error("invalid time query: (%s, %s)" % (lon, lat))
-            return None
+        #TODO: Verify code below is redundant due to above
+
+        # if dtstamp is None:
+        #     logger.error("invalid time query: (%s, %s)" % (lon, lat))
+        #     return None
 
         try:
             lat_idx, lon_idx = self.grid_coords(lat, lon, dtstamp=dtstamp, server_mode=server_mode)

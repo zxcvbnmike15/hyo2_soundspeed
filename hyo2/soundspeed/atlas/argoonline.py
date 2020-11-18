@@ -36,13 +36,25 @@ class ArgoOnline(AbstractAtlas):
         return self._has_data_downloaded
         pass
 
-    def query(self, lat: Optional[float], lon: Optional[float], dtstamp: Union[dt,None]=None,
-              server_mode: bool = False):
-        pass
-
     def download_db(self) -> bool:
         pass
 
+    def query(self, lat: Optional[float], lon: Optional[float], dtstamp: Union[dt,None]=None,
+              server_mode: bool = False):
+        """Query Argos database for passed timestamp and location"""
+
+        original_datestamp = dtstamp
+        if dtstamp is None:
+            dtstamp = dt.utcnow()
+        if not isinstance(dtstamp, dt):
+            raise RuntimeError("Invalid date passed: %s" % type(dtstamp))
+        logger.debug("Query: %s @ (%.6f, %.6f)" & (dtstamp, lon, lat))
+
+        if (lat is None) or (lon is None):
+            logger.error("invalid location query: %s @ (%s, %s)" % (dtstamp.strftime("%Y/%m/%d %H:%M:%S"), lon, lat))
+            return None
+        
+        pass
     # ### private methods ###
 
     @staticmethod
